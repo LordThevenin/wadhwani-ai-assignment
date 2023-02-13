@@ -1,9 +1,12 @@
 package facades
 
-import "user-service/services"
+import (
+	"user-service/models"
+	"user-service/services"
+)
 
 type IUserFacade interface {
-	UploadUsers()
+	UploadUsers(models.UserFileUpload) error
 	GetUser()
 }
 
@@ -19,8 +22,14 @@ func InitUserFacade() *UserFacade {
 	return uf
 }
 
-func (f *UserFacade) UploadUsers() {
-
+func (f *UserFacade) UploadUsers(uploadData models.UserFileUpload) (err error) {
+	// Transform upload form data to list of user models
+	// Give user service to handle list of user models
+	err = f.userService.UploadUsers([]models.User{})
+	if err != nil {
+		// Log failure to upload users
+	}
+	return
 }
 
 func (f *UserFacade) GetUser() {
