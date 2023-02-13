@@ -1,10 +1,15 @@
 package controllers
 
-import "user-service/facades"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"user-service/facades"
+	"user-service/models"
+)
 
 type IUserController interface {
-	UploadUsers()
-	GetUser()
+	UploadUsers(ctx *gin.Context)
+	GetUser(ctx *gin.Context)
 }
 
 type UserController struct {
@@ -17,10 +22,21 @@ func InitUserController() *UserController {
 	return uc
 }
 
-func (c *UserController) UploadUsers() {
-
+func (c *UserController) UploadUsers(ctx *gin.Context) {
+	var uploadData models.UserFileUpload
+	err := ctx.ShouldBind(&uploadData)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, "bad request")
+		return
+	}
+	err = c.userFacade.UploadUsers(uploadData)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, "user upload failed")
+		return
+	}
+	ctx.JSON(http.StatusOK, "success")
 }
 
-func (c *UserController) GetUser() {
+func (c *UserController) GetUser(ctx *gin.Context) {
 
 }
