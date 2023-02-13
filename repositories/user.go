@@ -8,8 +8,8 @@ import (
 )
 
 type IUserRepository interface {
-	UploadUsers(users []entities.User) error
-	GetUser(id int64) entities.User
+	UpsertUsers(users []entities.User) error
+	GetUser(id int64) ([]entities.User, error)
 }
 
 type UserSQLRepository struct {
@@ -22,8 +22,8 @@ func InitUserSQLRepository() *UserSQLRepository {
 	return ur
 }
 
-// UploadUsers upserts user values based on phone number
-func (s *UserSQLRepository) UploadUsers(users []entities.User) (err error) {
+// UpsertUsers upserts user values based on phone number
+func (s *UserSQLRepository) UpsertUsers(users []entities.User) (err error) {
 	err = s.db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "phone_number"}},
 		DoUpdates: clause.AssignmentColumns([]string{"state", "district", "village"}),
