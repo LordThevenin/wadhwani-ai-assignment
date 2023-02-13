@@ -1,7 +1,7 @@
 package services
 
 import (
-	"user-service/entities"
+	"user-service/dto"
 	"user-service/models"
 	"user-service/repositories"
 )
@@ -25,8 +25,9 @@ func InitUserService() *UserService {
 
 func (s *UserService) UploadUsers(users []models.User) (err error) {
 	// Transform users list to entities
+	userEntities := dto.UserModelsToUserEntities(users)
 	// Upsert users list
-	err = s.userRepository.UpsertUsers([]entities.User{})
+	err = s.userRepository.UpsertUsers(userEntities)
 	if err != nil {
 		// Log repository error for upsert
 	}
