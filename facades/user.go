@@ -8,7 +8,7 @@ import (
 
 type IUserFacade interface {
 	UploadUsers(models.UserFileUpload) error
-	GetUser()
+	GetUser(int64) (models.User, error)
 }
 
 type UserFacade struct {
@@ -39,6 +39,13 @@ func (f *UserFacade) UploadUsers(uploadData models.UserFileUpload) (err error) {
 	return
 }
 
-func (f *UserFacade) GetUser() {
-
+func (f *UserFacade) GetUser(userId int64) (user models.User, err error) {
+	// Fetch user from service
+	user, err = f.userService.GetUser(userId)
+	if err != nil {
+		// Log failure to upload users
+		return
+	}
+	// Translate to requested language
+	return
 }

@@ -14,6 +14,7 @@ func NewRouter() *gin.Engine {
 	{
 		ur := root.Group("/user")
 		ur.POST("/upload", uc.UploadUsers)
+		ur.GET("/:id", uc.GetUser)
 	}
 
 	return router

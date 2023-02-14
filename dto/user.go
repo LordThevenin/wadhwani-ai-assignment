@@ -20,3 +20,12 @@ func UserModelsToUserEntities(users []models.User) (userEntities []entities.User
 	}
 	return
 }
+
+func UserEntityToUserModel(user entities.User) (userModel models.User) {
+	userModel.Name = user.Name
+	userModel.State = user.State
+	userModel.Village = user.Village
+	userModel.PhoneNumber = user.PhoneNumber
+	userModel.District = user.District
+	return
+}
