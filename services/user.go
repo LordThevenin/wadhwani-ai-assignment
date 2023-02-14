@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"user-service/dto"
 	"user-service/models"
 	"user-service/repositories"
@@ -8,7 +9,7 @@ import (
 
 type IUserService interface {
 	UploadUsers([]models.User) error
-	GetUser()
+	GetUser(int64) (models.User, error)
 }
 
 type UserService struct {
@@ -34,6 +35,17 @@ func (s *UserService) UploadUsers(users []models.User) (err error) {
 	return
 }
 
-func (s *UserService) GetUser() {
-
+func (s *UserService) GetUser(userId int64) (user models.User, err error) {
+	// Fetch from repository
+	userEntity, err := s.userRepository.GetUser(userId)
+	if err != nil {
+		// Log repository err for fetch
+	}
+	if len(userEntity) > 0 {
+		user = dto.UserEntityToUserModel(userEntity[0])
+	} else {
+		// Log error for no user found
+		err = fmt.Errorf("no user found")
+	}
+	return
 }
