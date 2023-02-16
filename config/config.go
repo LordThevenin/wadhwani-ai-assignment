@@ -13,6 +13,9 @@ type Configuration struct {
 	DbHost                   string `mapstructure:"DB_HOST"`
 	DbName                   string `mapstructure:"DB_NAME"`
 	TranslationConfigFile    string `mapstructure:"GOOGLE_APPLICATION_CREDENTIALS"`
+	RedisHost                string `mapstructure:"REDIS_HOST"`
+	RedisPort                string `mapstructure:"REDIS_PORT"`
+	RedisDB                  int    `mapstructure:"REDIS_DB"`
 	TranslationConfiguration []byte
 }
 
