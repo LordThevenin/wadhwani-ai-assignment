@@ -77,4 +77,8 @@ func automigrateSqlDb() {
 	if err != nil {
 		// Log error to automigrate user entity
 	}
+	err = db.sqlDB.AutoMigrate(&entities.AuthUser{})
+	if err != nil {
+		// Log error to automigrate authUser entity
+	}
 }
