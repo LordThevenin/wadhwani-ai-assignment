@@ -21,11 +21,11 @@ type RedisUserCacheRepository struct {
 func InitRedisUserCacheRepository() *RedisUserCacheRepository {
 	redisClient := new(RedisUserCacheRepository)
 	redisClient.cache = db.GetRedisCache()
-	return new(RedisUserCacheRepository)
+	return redisClient
 }
 
 func (r *RedisUserCacheRepository) Get(key string) (user models.User, err error) {
-	ctx := context.Background()
+	ctx := context.TODO()
 	resp, err := r.cache.Get(ctx, key).Bytes()
 	if err != nil {
 		// Log cache miss

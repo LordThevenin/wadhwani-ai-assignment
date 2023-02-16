@@ -65,6 +65,9 @@ func (f *UserFacade) GetUser(ctx *gin.Context, userId int64, lang language.Tag) 
 }
 
 func (f *UserFacade) translateUserModelToTargetLanguage(ctx *gin.Context, user models.User, lang language.Tag) (translatedUser models.User, err error) {
+	if lang == language.English {
+		return user, nil
+	}
 	// Convert user model to list of strings
 	stringList := dto.UserModelToStringList(user)
 	// Translate list of strings
