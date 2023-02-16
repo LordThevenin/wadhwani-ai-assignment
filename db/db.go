@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"github.com/go-redis/redis/v8"
@@ -33,6 +34,10 @@ func GetSqlDB() *gorm.DB {
 	return db.sqlDB
 }
 
+func GetRedisCache() *redis.Client {
+	return db.redisCache
+}
+
 func initSqlDB(cfg *config.Configuration) error {
 	// Run migrations based on models
 	dsn := cfg.DbUser + ":" + cfg.DbPassword + "@tcp(" + cfg.DbHost + ")/" + cfg.DbName + "?charset=utf8mb4&parseTime=True"
@@ -52,6 +57,19 @@ func initSqlDB(cfg *config.Configuration) error {
 
 func initRedis(cfg *config.Configuration) {
 	// initialize redis cache
+	ctx := context.Background()
+	db.redisCache = redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", cfg.RedisHost, cfg.RedisPort),
+		Password: "",          // no password set.
+		DB:       cfg.RedisDB, // use default DB.
+	})
+
+	_, err := db.redisCache.Ping(ctx).Result()
+	if err != nil {
+		// Log error
+	} else {
+		// Log response
+	}
 }
 
 func automigrateSqlDb() {
