@@ -34,6 +34,10 @@ func GetSqlDB() *gorm.DB {
 	return db.sqlDB
 }
 
+func GetRedisCache() *redis.Client {
+	return db.redisCache
+}
+
 func initSqlDB(cfg *config.Configuration) error {
 	// Run migrations based on models
 	dsn := cfg.DbUser + ":" + cfg.DbPassword + "@tcp(" + cfg.DbHost + ")/" + cfg.DbName + "?charset=utf8mb4&parseTime=True"
