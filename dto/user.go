@@ -1,6 +1,8 @@
 package dto
 
 import (
+	"cloud.google.com/go/translate"
+	"strconv"
 	"user-service/entities"
 	"user-service/models"
 )
@@ -27,5 +29,23 @@ func UserEntityToUserModel(user entities.User) (userModel models.User) {
 	userModel.Village = user.Village
 	userModel.PhoneNumber = user.PhoneNumber
 	userModel.District = user.District
+	return
+}
+
+func UserModelToStringList(user models.User) (stringList []string) {
+	stringList = append(stringList, strconv.FormatInt(user.PhoneNumber, 10))
+	stringList = append(stringList, user.Name)
+	stringList = append(stringList, user.State)
+	stringList = append(stringList, user.Village)
+	stringList = append(stringList, user.District)
+	return
+}
+
+func TranslatedListToUserModel(translatedList []translate.Translation) (user models.User) {
+	user.PhoneNumber, _ = strconv.ParseInt(translatedList[0].Text, 10, 64)
+	user.Name = translatedList[1].Text
+	user.State = translatedList[2].Text
+	user.Village = translatedList[3].Text
+	user.District = translatedList[4].Text
 	return
 }

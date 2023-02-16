@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"golang.org/x/text/language"
 	"net/http"
 	"strconv"
+	"user-service/constants"
 	"user-service/facades"
 	"user-service/models"
 )
@@ -44,7 +46,10 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, "bad request")
 		return
 	}
-	user, err := c.userFacade.GetUser(userId)
+	lang, _ := ctx.Cookie("lang")
+	accept := ctx.GetHeader("Accept-Language")
+	tag, _ := language.MatchStrings(constants.Matcher, lang, accept)
+	user, err := c.userFacade.GetUser(ctx, userId, tag)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, "user upload failed")
 		return

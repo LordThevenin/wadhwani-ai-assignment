@@ -2,15 +2,18 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"os"
 	"sync"
 )
 
 type Configuration struct {
-	Port       int    `mapstructure:"PORT"`
-	DbUser     string `mapstructure:"DB_USER"`
-	DbPassword string `mapstructure:"DB_PASSWORD"`
-	DbHost     string `mapstructure:"DB_HOST"`
-	DbName     string `mapstructure:"DB_NAME"`
+	Port                     int    `mapstructure:"PORT"`
+	DbUser                   string `mapstructure:"DB_USER"`
+	DbPassword               string `mapstructure:"DB_PASSWORD"`
+	DbHost                   string `mapstructure:"DB_HOST"`
+	DbName                   string `mapstructure:"DB_NAME"`
+	TranslationConfigFile    string `mapstructure:"GOOGLE_APPLICATION_CREDENTIALS"`
+	TranslationConfiguration []byte
 }
 
 // Singleton variable for configuration
@@ -37,5 +40,15 @@ func Init() {
 		if err != nil {
 			// Log error in setting config
 		}
+		config.TranslationConfiguration = getTranslationConfigurationFromFile(config.TranslationConfigFile)
 	})
+}
+
+func getTranslationConfigurationFromFile(file string) []byte {
+	jsonFile, err := os.ReadFile(file)
+	if err != nil {
+		panic("Failed to obtain translation credentials from file with error: " + err.Error())
+	}
+
+	return jsonFile
 }
