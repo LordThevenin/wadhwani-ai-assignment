@@ -43,17 +43,23 @@ func (f *UserFacade) UploadUsers(uploadData models.UserFileUpload) (err error) {
 }
 
 func (f *UserFacade) GetUser(ctx *gin.Context, userId int64, lang language.Tag) (user models.User, err error) {
-	// Fetch user from service
-	user, err = f.userService.GetUser(userId)
-	if err != nil {
-		// Log failure to get user
-		return
-	}
-	// Translate to requested language
-	user, err = f.translateUserModelToTargetLanguage(ctx, user, lang)
-	if err != nil {
-		// Log failure to translate user
-		return
+	// Fetch user from cache
+	user, ok := f.userService.GetUserFromCache(userId, lang)
+	if !ok {
+		// Fetch user from db
+		user, err = f.userService.GetUser(userId)
+		if err != nil {
+			// Log failure to get user
+			return
+		}
+		// Translate to requested language
+		user, err = f.translateUserModelToTargetLanguage(ctx, user, lang)
+		if err != nil {
+			// Log failure to translate user
+			return
+		}
+		// Set user in cache
+		f.userService.SetUserInCache(userId, lang, user)
 	}
 	return
 }

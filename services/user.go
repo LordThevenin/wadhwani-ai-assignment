@@ -12,7 +12,7 @@ type IUserService interface {
 	UploadUsers([]models.User) error
 	GetUser(int64) (models.User, error)
 	GetUserFromCache(int64, language.Tag) (models.User, bool)
-	SetUserInCache(int64, language.Tag)
+	SetUserInCache(int64, language.Tag, models.User)
 }
 
 type UserService struct {
