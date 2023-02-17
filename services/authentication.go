@@ -3,14 +3,15 @@ package services
 import (
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
+	"user-service/dto"
 	"user-service/entities"
 	"user-service/models"
 	"user-service/repositories"
 )
 
 type IAuthenticationService interface {
-	Register() error
-	Login() (string, error)
+	Register(user models.AuthUser) error
+	Login(user models.AuthUser) (string, error)
 }
 
 type AuthenticationService struct {
@@ -24,6 +25,11 @@ func InitAuthorizationService() *AuthenticationService {
 }
 
 func (s *AuthenticationService) Register(user models.AuthUser) (err error) {
+	userEntity := dto.AuthUserModelToEntity(user, 1)
+	err = s.authRepository.AddUser(userEntity)
+	if err != nil {
+		// Log error in adding auth user
+	}
 	return
 }
 
