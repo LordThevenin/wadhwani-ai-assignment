@@ -29,7 +29,7 @@ func InitUserService() *UserService {
 
 func (s *UserService) UploadUsers(users []models.User) (err error) {
 	// Transform users list to entities
-	userEntities := dto.UserModelsToUserEntities(users)
+	userEntities := dto.UserModelsToUserEntities(users, 1)
 	// Upsert users list
 	err = s.userRepository.UpsertUsers(userEntities)
 	if err != nil {

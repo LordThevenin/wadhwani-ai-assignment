@@ -26,7 +26,7 @@ func InitUserSQLRepository() *UserSQLRepository {
 func (s *UserSQLRepository) UpsertUsers(users []entities.User) (err error) {
 	err = s.db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "phone_number"}},
-		DoUpdates: clause.AssignmentColumns([]string{"state", "district", "village"}),
+		DoUpdates: clause.AssignmentColumns([]string{"state", "district", "village", "version", "updated_by"}),
 	}).Create(&users).Error
 	return
 }

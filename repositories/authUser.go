@@ -8,7 +8,7 @@ import (
 
 type IAuthUserRepository interface {
 	AddUser(user entities.AuthUser) error
-	GetUser(id int64) ([]entities.AuthUser, error)
+	GetUser(userName string) ([]entities.AuthUser, error)
 }
 
 type AuthUserSQLRepository struct {
@@ -26,8 +26,8 @@ func (s *AuthUserSQLRepository) AddUser(user entities.AuthUser) (err error) {
 	return
 }
 
-func (s *AuthUserSQLRepository) GetUser(id int64) (user entities.AuthUser, err error) {
-	result := s.db.Where("id = ? AND isDeleted = ?", id, false).First(&user)
+func (s *AuthUserSQLRepository) GetUser(userName string) (user []entities.AuthUser, err error) {
+	result := s.db.Where("user_name = ? AND isDeleted = ?", userName, false).First(&user)
 	if result.Error != nil {
 		err = result.Error
 	}
