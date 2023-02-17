@@ -7,18 +7,19 @@ import (
 	"user-service/models"
 )
 
-func UserModelToUserEntity(user models.User) (userEntity entities.User) {
+func UserModelToUserEntity(user models.User, version int) (userEntity entities.User) {
 	userEntity.Name = user.Name
 	userEntity.PhoneNumber = user.PhoneNumber
 	userEntity.State = user.State
 	userEntity.District = user.District
 	userEntity.Village = user.Village
+	userEntity.Version = version
 	return
 }
 
-func UserModelsToUserEntities(users []models.User) (userEntities []entities.User) {
+func UserModelsToUserEntities(users []models.User, version int) (userEntities []entities.User) {
 	for _, user := range users {
-		userEntities = append(userEntities, UserModelToUserEntity(user))
+		userEntities = append(userEntities, UserModelToUserEntity(user, version))
 	}
 	return
 }
