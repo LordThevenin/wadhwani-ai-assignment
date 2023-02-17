@@ -17,6 +17,7 @@ type Configuration struct {
 	RedisPort                string `mapstructure:"REDIS_PORT"`
 	RedisDB                  int    `mapstructure:"REDIS_DB"`
 	TranslationConfiguration []byte
+	ApiSecret                string `mapstructure:"API_SECRET"`
 }
 
 // Singleton variable for configuration

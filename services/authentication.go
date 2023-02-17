@@ -7,6 +7,7 @@ import (
 	"user-service/entities"
 	"user-service/models"
 	"user-service/repositories"
+	"user-service/utils"
 )
 
 type IAuthenticationService interface {
@@ -38,7 +39,12 @@ func (s *AuthenticationService) Login(user models.AuthUser) (jwt string, err err
 	// Validate user
 	err = s.validatePassword(user, err, userEntity)
 	if err != nil {
-		// Log no user found
+		// Log password match failed
+		err = fmt.Errorf("incorrect password")
+	}
+	jwt, err = utils.GenerateToken(userEntity[0])
+	if err != nil {
+		// Log error in generating jwt token
 		err = fmt.Errorf("incorrect password")
 	}
 	return
