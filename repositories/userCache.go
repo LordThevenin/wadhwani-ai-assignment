@@ -7,6 +7,7 @@ import (
 	"user-service/constants"
 	"user-service/db"
 	"user-service/models"
+	"user-service/utils"
 )
 
 type IUserCacheRepository interface {
@@ -29,6 +30,7 @@ func (r *RedisUserCacheRepository) Get(key string) (user models.User, err error)
 	resp, err := r.cache.Get(ctx, key).Bytes()
 	if err != nil {
 		// Log cache miss
+		utils.Logger().Debugf("RedisUserCacheRepository: failed to get value of key: %s,with error: %s", key, err.Error())
 		return
 	}
 	err = json.Unmarshal(resp, &user)
@@ -44,6 +46,7 @@ func (r *RedisUserCacheRepository) Set(key string, user models.User) {
 	userValue, err := json.Marshal(user)
 	if err != nil {
 		// Log marshalling error
+		utils.Logger().Debugf("RedisUserCacheRepository: failed to marshal user with error: %s", err.Error())
 		return
 	}
 	r.cache.Set(ctx, key, userValue, constants.TTL)

@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 	"user-service/db"
 	"user-service/entities"
+	"user-service/utils"
 )
 
 type IAuthUserRepository interface {
@@ -30,6 +31,7 @@ func (s *AuthUserSQLRepository) GetUser(userName string) (user []entities.AuthUs
 	result := s.db.Where("user_name = ? AND isDeleted = ?", userName, false).First(&user)
 	if result.Error != nil {
 		err = result.Error
+		utils.Logger().Debugf("AuthUserSQLRepository: error in get user by user name with error: %s", err.Error())
 	}
 	return
 }

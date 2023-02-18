@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm/schema"
 	"user-service/config"
 	"user-service/entities"
+	"user-service/utils"
 )
 
 type Database struct {
@@ -25,6 +26,7 @@ func Init() {
 	err := initSqlDB(cfg)
 	if err != nil {
 		// Send error initialization failure
+		utils.Logger().Errorf("Init (DB): failed to initialize sql db with error: %s", err.Error())
 	}
 	initRedis(cfg)
 	automigrateSqlDb()
@@ -43,6 +45,7 @@ func initSqlDB(cfg *config.Configuration) error {
 	dsn := cfg.DbUser + ":" + cfg.DbPassword + "@tcp(" + cfg.DbHost + ")/" + cfg.DbName + "?charset=utf8mb4&parseTime=True"
 	sqlDb, err := sql.Open("mysql", dsn)
 	if err != nil {
+		utils.Logger().Errorf("initSqlDB: failed to initialize sql db with error: %s", err.Error())
 		panic(err)
 	}
 	db.sqlDB, err = gorm.Open(mysql.New(mysql.Config{Conn: sqlDb}), &gorm.Config{NamingStrategy: schema.NamingStrategy{SingularTable: true}})
@@ -67,8 +70,10 @@ func initRedis(cfg *config.Configuration) {
 	_, err := db.redisCache.Ping(ctx).Result()
 	if err != nil {
 		// Log error
+		utils.Logger().Errorf("initRedis: failed to initialize redis cache with error: %s", err.Error())
 	} else {
 		// Log response
+		utils.Logger().Debugf("initRedis: pong")
 	}
 }
 
@@ -76,9 +81,11 @@ func automigrateSqlDb() {
 	err := db.sqlDB.AutoMigrate(&entities.User{})
 	if err != nil {
 		// Log error to automigrate user entity
+		utils.Logger().Errorf("automigrateSqlDb: failed to automigrate entities.User with error: %s", err.Error())
 	}
 	err = db.sqlDB.AutoMigrate(&entities.AuthUser{})
 	if err != nil {
 		// Log error to automigrate authUser entity
+		utils.Logger().Errorf("automigrateSqlDb: failed to automigrate entities.AuthUser with error: %s", err.Error())
 	}
 }
