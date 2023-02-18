@@ -31,14 +31,17 @@ func (f *UserFacade) UploadUsers(uploadData models.UserFileUpload) (err error) {
 	users, err := utils.ParseUserUploadFile(uploadData)
 	if err != nil {
 		// Log failure to parse upload file
+		utils.Logger().Errorf("UserFacade: error parsing upload file")
 		return
 	}
 	// Give user service to handle list of user models
 	err = f.userService.UploadUsers(users)
 	if err != nil {
 		// Log failure to upload users
+		utils.Logger().Errorf("UserFacade: error uploading users")
 		return
 	}
+	utils.Logger().Infof("UserFacade: cache hit")
 	return
 }
 
@@ -46,21 +49,25 @@ func (f *UserFacade) GetUser(ctx *gin.Context, userId int64, lang language.Tag) 
 	// Fetch user from cache
 	user, ok := f.userService.GetUserFromCache(userId, lang)
 	if !ok {
+		utils.Logger().Infof("UserFacade: cache missed, fetching from db")
 		// Fetch user from db
 		user, err = f.userService.GetUser(userId)
 		if err != nil {
 			// Log failure to get user
+			utils.Logger().Errorf("UserFacade: error getting user from db")
 			return
 		}
 		// Translate to requested language
 		user, err = f.translateUserModelToTargetLanguage(ctx, user, lang)
 		if err != nil {
 			// Log failure to translate user
+			utils.Logger().Errorf("UserFacade: error translating user details to target language")
 			return
 		}
 		// Set user in cache
 		f.userService.SetUserInCache(userId, lang, user)
 	}
+	utils.Logger().Infof("UserFacade: cache hit")
 	return
 }
 
@@ -74,6 +81,7 @@ func (f *UserFacade) translateUserModelToTargetLanguage(ctx *gin.Context, user m
 	translatedList, err := f.translationService.TranslateText(ctx, stringList, lang)
 	if err != nil {
 		// Log error in translating user values
+		utils.Logger().Errorf("UserFacade: failed to translate user model to target language")
 		return
 	}
 	// Convert list of strings to model

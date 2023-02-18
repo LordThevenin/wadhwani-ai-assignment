@@ -6,6 +6,7 @@ import (
 	"user-service/dto"
 	"user-service/models"
 	"user-service/repositories"
+	"user-service/utils"
 )
 
 type IUserService interface {
@@ -34,6 +35,7 @@ func (s *UserService) UploadUsers(users []models.User) (err error) {
 	err = s.userRepository.UpsertUsers(userEntities)
 	if err != nil {
 		// Log repository error for upsert
+		utils.Logger().Errorf("UserService: user upsert failure")
 	}
 	return
 }
@@ -43,6 +45,7 @@ func (s *UserService) GetUser(userId int64) (user models.User, err error) {
 	userEntity, err := s.userRepository.GetUser(userId)
 	if err != nil {
 		// Log repository err for fetch
+		utils.Logger().Errorf("UserService: failed to fetch user with given id")
 	}
 	if len(userEntity) > 0 {
 		user = dto.UserEntityToUserModel(userEntity[0])
@@ -59,6 +62,7 @@ func (s *UserService) GetUserFromCache(userId int64, lang language.Tag) (user mo
 	user, err := s.userCacheRepository.Get(key)
 	if err != nil {
 		// Log cache miss for the key
+		utils.Logger().Infof("UserService: failed to fetch user from cache")
 		return
 	}
 	hit = true

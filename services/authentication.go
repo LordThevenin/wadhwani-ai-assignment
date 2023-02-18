@@ -30,6 +30,7 @@ func (s *AuthenticationService) Register(user models.AuthUser) (err error) {
 	err = s.authRepository.AddUser(userEntity)
 	if err != nil {
 		// Log error in adding auth user
+		utils.Logger().Errorf("AuthenticationService: failed to register user")
 	}
 	return
 }
@@ -40,11 +41,13 @@ func (s *AuthenticationService) Login(user models.AuthUser) (jwt string, err err
 	err = s.validatePassword(user, err, userEntity)
 	if err != nil {
 		// Log password match failed
+		utils.Logger().Infof("AuthenticationService: password validation failed")
 		err = fmt.Errorf("incorrect password")
 	}
 	jwt, err = utils.GenerateToken(userEntity[0])
 	if err != nil {
 		// Log error in generating jwt token
+		utils.Logger().Errorf("AuthenticationService: failed to generate auth token")
 		err = fmt.Errorf("incorrect password")
 	}
 	return
@@ -59,9 +62,11 @@ func (s *AuthenticationService) getAuthUser(user models.AuthUser, err error) ([]
 	userEntity, err := s.authRepository.GetUser(user.UserName)
 	if err != nil {
 		// Log error finding user
+		utils.Logger().Errorf("AuthenticationService: failed to find auth user from db")
 	}
 	if userEntity == nil || len(userEntity) == 0 {
 		// Log no user found
+		utils.Logger().Infof("AuthenticationService: user not found in db")
 		err = fmt.Errorf("user not found")
 	}
 	return userEntity, err

@@ -11,6 +11,7 @@ func ParseUserUploadFile(uploadData models.UserFileUpload) ([]models.User, error
 	csvData, err := fetchCSVData(uploadData.File)
 	if err != nil {
 		// Log error in fetching CSV data
+		Logger().Errorf("ParseUserUploadFile: error fetching csv data")
 		return nil, err
 	}
 	users := getUsersFromCSV(csvData)
@@ -38,11 +39,13 @@ func fetchCSVData(fileHeader *multipart.FileHeader) ([][]string, error) {
 	file, err := fileHeader.Open()
 	if err != nil {
 		// Log error in opening file
+		Logger().Debugf("fetchCSVData: error opening file")
 		return nil, err
 	}
 	csvData, err := csv.NewReader(file).ReadAll()
 	if err != nil {
 		// Log error in reading csv data
+		Logger().Debugf("fetchCSVData: error in reading csv data")
 		return nil, err
 	}
 	return csvData, nil
