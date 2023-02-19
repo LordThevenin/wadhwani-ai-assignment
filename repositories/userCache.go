@@ -26,7 +26,7 @@ func InitRedisUserCacheRepository() *RedisUserCacheRepository {
 }
 
 func (r *RedisUserCacheRepository) Get(key string) (user models.User, err error) {
-	ctx := context.TODO()
+	ctx := context.Background()
 	resp, err := r.cache.Get(ctx, key).Bytes()
 	if err != nil {
 		// Log cache miss
