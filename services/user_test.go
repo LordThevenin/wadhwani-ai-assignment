@@ -4,21 +4,16 @@ import (
 	"golang.org/x/text/language"
 	"reflect"
 	"testing"
+	"user-service/mocks"
 	"user-service/models"
-	"user-service/repositories"
 )
 
 func TestUserService_GetUser(t *testing.T) {
-	type fields struct {
-		userRepository      repositories.IUserRepository
-		userCacheRepository repositories.IUserCacheRepository
-	}
 	type args struct {
 		userId int64
 	}
 	tests := []struct {
 		name     string
-		fields   fields
 		args     args
 		wantUser models.User
 		wantErr  bool
@@ -28,8 +23,8 @@ func TestUserService_GetUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &UserService{
-				userRepository:      tt.fields.userRepository,
-				userCacheRepository: tt.fields.userCacheRepository,
+				userRepository:      &mocks.UserSQLRepositoryMock{},
+				userCacheRepository: &mocks.RedisUserCacheRepositoryMock{},
 			}
 			gotUser, err := s.GetUser(tt.args.userId)
 			if (err != nil) != tt.wantErr {
@@ -44,17 +39,12 @@ func TestUserService_GetUser(t *testing.T) {
 }
 
 func TestUserService_GetUserFromCache(t *testing.T) {
-	type fields struct {
-		userRepository      repositories.IUserRepository
-		userCacheRepository repositories.IUserCacheRepository
-	}
 	type args struct {
 		userId int64
 		lang   language.Tag
 	}
 	tests := []struct {
 		name     string
-		fields   fields
 		args     args
 		wantUser models.User
 		wantHit  bool
@@ -64,8 +54,8 @@ func TestUserService_GetUserFromCache(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &UserService{
-				userRepository:      tt.fields.userRepository,
-				userCacheRepository: tt.fields.userCacheRepository,
+				userRepository:      &mocks.UserSQLRepositoryMock{},
+				userCacheRepository: &mocks.RedisUserCacheRepositoryMock{},
 			}
 			gotUser, gotHit := s.GetUserFromCache(tt.args.userId, tt.args.lang)
 			if !reflect.DeepEqual(gotUser, tt.wantUser) {
@@ -79,27 +69,22 @@ func TestUserService_GetUserFromCache(t *testing.T) {
 }
 
 func TestUserService_SetUserInCache(t *testing.T) {
-	type fields struct {
-		userRepository      repositories.IUserRepository
-		userCacheRepository repositories.IUserCacheRepository
-	}
 	type args struct {
 		userId int64
 		lang   language.Tag
 		user   models.User
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
+		name string
+		args args
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &UserService{
-				userRepository:      tt.fields.userRepository,
-				userCacheRepository: tt.fields.userCacheRepository,
+				userRepository:      &mocks.UserSQLRepositoryMock{},
+				userCacheRepository: &mocks.RedisUserCacheRepositoryMock{},
 			}
 			s.SetUserInCache(tt.args.userId, tt.args.lang, tt.args.user)
 		})
@@ -107,16 +92,11 @@ func TestUserService_SetUserInCache(t *testing.T) {
 }
 
 func TestUserService_UploadUsers(t *testing.T) {
-	type fields struct {
-		userRepository      repositories.IUserRepository
-		userCacheRepository repositories.IUserCacheRepository
-	}
 	type args struct {
 		users []models.User
 	}
 	tests := []struct {
 		name    string
-		fields  fields
 		args    args
 		wantErr bool
 	}{
@@ -125,8 +105,8 @@ func TestUserService_UploadUsers(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &UserService{
-				userRepository:      tt.fields.userRepository,
-				userCacheRepository: tt.fields.userCacheRepository,
+				userRepository:      &mocks.UserSQLRepositoryMock{},
+				userCacheRepository: &mocks.RedisUserCacheRepositoryMock{},
 			}
 			if err := s.UploadUsers(tt.args.users); (err != nil) != tt.wantErr {
 				t.Errorf("UploadUsers() error = %v, wantErr %v", err, tt.wantErr)

@@ -5,34 +5,36 @@ import (
 	"golang.org/x/text/language"
 	"reflect"
 	"testing"
+	"user-service/mocks"
 	"user-service/models"
-	"user-service/services"
 )
 
 func TestUserFacade_GetUser(t *testing.T) {
-	type fields struct {
-		userService        services.IUserService
-		translationService services.ITranslationService
-	}
 	type args struct {
 		ctx    *gin.Context
 		userId int64
 		lang   language.Tag
 	}
-	tests := []struct {
+	type testStruct struct {
 		name     string
-		fields   fields
 		args     args
 		wantUser models.User
 		wantErr  bool
-	}{
+	}
+	tests := []testStruct{
 		// TODO: Add test cases.
+		{
+			name:     "",
+			args:     args{},
+			wantUser: models.User{},
+			wantErr:  false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := &UserFacade{
-				userService:        tt.fields.userService,
-				translationService: tt.fields.translationService,
+				userService:        &mocks.UserServiceMock{},
+				translationService: &mocks.GoogleTranslationServiceMock{},
 			}
 			gotUser, err := f.GetUser(tt.args.ctx, tt.args.userId, tt.args.lang)
 			if (err != nil) != tt.wantErr {
@@ -47,26 +49,22 @@ func TestUserFacade_GetUser(t *testing.T) {
 }
 
 func TestUserFacade_UploadUsers(t *testing.T) {
-	type fields struct {
-		userService        services.IUserService
-		translationService services.ITranslationService
-	}
 	type args struct {
 		uploadData models.UserFileUpload
 	}
-	tests := []struct {
+	type testStruct struct {
 		name    string
-		fields  fields
 		args    args
 		wantErr bool
-	}{
+	}
+	tests := []testStruct{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := &UserFacade{
-				userService:        tt.fields.userService,
-				translationService: tt.fields.translationService,
+				userService:        &mocks.UserServiceMock{},
+				translationService: &mocks.GoogleTranslationServiceMock{},
 			}
 			if err := f.UploadUsers(tt.args.uploadData); (err != nil) != tt.wantErr {
 				t.Errorf("UploadUsers() error = %v, wantErr %v", err, tt.wantErr)
@@ -76,29 +74,25 @@ func TestUserFacade_UploadUsers(t *testing.T) {
 }
 
 func TestUserFacade_translateUserModelToTargetLanguage(t *testing.T) {
-	type fields struct {
-		userService        services.IUserService
-		translationService services.ITranslationService
-	}
 	type args struct {
 		ctx  *gin.Context
 		user models.User
 		lang language.Tag
 	}
-	tests := []struct {
+	type testStruct struct {
 		name               string
-		fields             fields
 		args               args
 		wantTranslatedUser models.User
 		wantErr            bool
-	}{
+	}
+	tests := []testStruct{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			f := &UserFacade{
-				userService:        tt.fields.userService,
-				translationService: tt.fields.translationService,
+				userService:        &mocks.UserServiceMock{},
+				translationService: &mocks.GoogleTranslationServiceMock{},
 			}
 			gotTranslatedUser, err := f.translateUserModelToTargetLanguage(tt.args.ctx, tt.args.user, tt.args.lang)
 			if (err != nil) != tt.wantErr {

@@ -4,20 +4,16 @@ import (
 	"reflect"
 	"testing"
 	"user-service/entities"
+	"user-service/mocks"
 	"user-service/models"
-	"user-service/repositories"
 )
 
 func TestAuthenticationService_Login(t *testing.T) {
-	type fields struct {
-		authRepository repositories.IAuthUserRepository
-	}
 	type args struct {
 		user models.AuthUser
 	}
 	tests := []struct {
 		name    string
-		fields  fields
 		args    args
 		wantJwt string
 		wantErr bool
@@ -27,7 +23,7 @@ func TestAuthenticationService_Login(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &AuthenticationService{
-				authRepository: tt.fields.authRepository,
+				authRepository: &mocks.AuthUserSQLRepositoryMock{},
 			}
 			gotJwt, err := s.Login(tt.args.user)
 			if (err != nil) != tt.wantErr {
@@ -42,15 +38,11 @@ func TestAuthenticationService_Login(t *testing.T) {
 }
 
 func TestAuthenticationService_Register(t *testing.T) {
-	type fields struct {
-		authRepository repositories.IAuthUserRepository
-	}
 	type args struct {
 		user models.AuthUser
 	}
 	tests := []struct {
 		name    string
-		fields  fields
 		args    args
 		wantErr bool
 	}{
@@ -59,7 +51,7 @@ func TestAuthenticationService_Register(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &AuthenticationService{
-				authRepository: tt.fields.authRepository,
+				authRepository: &mocks.AuthUserSQLRepositoryMock{},
 			}
 			if err := s.Register(tt.args.user); (err != nil) != tt.wantErr {
 				t.Errorf("Register() error = %v, wantErr %v", err, tt.wantErr)
@@ -69,16 +61,12 @@ func TestAuthenticationService_Register(t *testing.T) {
 }
 
 func TestAuthenticationService_getAuthUser(t *testing.T) {
-	type fields struct {
-		authRepository repositories.IAuthUserRepository
-	}
 	type args struct {
 		user models.AuthUser
 		err  error
 	}
 	tests := []struct {
 		name    string
-		fields  fields
 		args    args
 		want    []entities.AuthUser
 		wantErr bool
@@ -88,7 +76,7 @@ func TestAuthenticationService_getAuthUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &AuthenticationService{
-				authRepository: tt.fields.authRepository,
+				authRepository: &mocks.AuthUserSQLRepositoryMock{},
 			}
 			got, err := s.getAuthUser(tt.args.user, tt.args.err)
 			if (err != nil) != tt.wantErr {
@@ -103,9 +91,6 @@ func TestAuthenticationService_getAuthUser(t *testing.T) {
 }
 
 func TestAuthenticationService_validatePassword(t *testing.T) {
-	type fields struct {
-		authRepository repositories.IAuthUserRepository
-	}
 	type args struct {
 		user       models.AuthUser
 		err        error
@@ -113,7 +98,6 @@ func TestAuthenticationService_validatePassword(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		fields  fields
 		args    args
 		wantErr bool
 	}{
@@ -122,7 +106,7 @@ func TestAuthenticationService_validatePassword(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := &AuthenticationService{
-				authRepository: tt.fields.authRepository,
+				authRepository: &mocks.AuthUserSQLRepositoryMock{},
 			}
 			if err := s.validatePassword(tt.args.user, tt.args.err, tt.args.userEntity); (err != nil) != tt.wantErr {
 				t.Errorf("validatePassword() error = %v, wantErr %v", err, tt.wantErr)
