@@ -19,6 +19,24 @@ func TestUserService_GetUser(t *testing.T) {
 		wantErr  bool
 	}{
 		// TODO: Add test cases.
+		{
+			"Success",
+			args{userId: 1},
+			models.User{
+				PhoneNumber: 7357,
+				Name:        "test",
+				State:       "testState",
+				District:    "testDistrict",
+				Village:     "testVillage",
+			},
+			false,
+		},
+		{
+			"Fail",
+			args{userId: 0},
+			models.User{},
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -50,6 +68,24 @@ func TestUserService_GetUserFromCache(t *testing.T) {
 		wantHit  bool
 	}{
 		// TODO: Add test cases.
+		{
+			"Success",
+			args{userId: 1, lang: language.English},
+			models.User{
+				PhoneNumber: 7357,
+				Name:        "test",
+				State:       "testState",
+				District:    "testDistrict",
+				Village:     "testVillage",
+			},
+			true,
+		},
+		{
+			"Fail",
+			args{userId: 1, lang: language.Hindi},
+			models.User{},
+			false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -79,6 +115,16 @@ func TestUserService_SetUserInCache(t *testing.T) {
 		args args
 	}{
 		// TODO: Add test cases.
+		{
+			"Success",
+			args{userId: 1, lang: language.English, user: models.User{
+				PhoneNumber: 7357,
+				Name:        "test",
+				State:       "testState",
+				District:    "testDistrict",
+				Village:     "testVillage",
+			}},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -101,6 +147,32 @@ func TestUserService_UploadUsers(t *testing.T) {
 		wantErr bool
 	}{
 		// TODO: Add test cases.
+		{
+			"Success",
+			args{users: []models.User{
+				models.User{
+					PhoneNumber: 7357,
+					Name:        "test",
+					State:       "testState",
+					District:    "testDistrict",
+					Village:     "testVillage",
+				},
+			}},
+			false,
+		},
+		{
+			"Fail",
+			args{users: []models.User{
+				models.User{
+					PhoneNumber: 73572,
+					Name:        "test2",
+					State:       "testState2",
+					District:    "testDistrict2",
+					Village:     "testVillage2",
+				},
+			}},
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

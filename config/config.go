@@ -28,11 +28,11 @@ func GetConfig() *Configuration {
 	return config
 }
 
-func Init() {
+func Init(file string) {
 	// initialize Config
 	once.Do(func() {
 		viper.AddConfigPath(".")
-		viper.SetConfigName(".env")
+		viper.SetConfigName(file)
 		viper.SetConfigType("env")
 		viper.AutomaticEnv()
 		err := viper.ReadInConfig()

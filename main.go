@@ -11,7 +11,7 @@ func main() {
 	// Initialize logger
 	utils.InitLogger()
 	// Initialize Config
-	config.Init()
+	config.Init(".env")
 	// Initialize Components
 	db.Init()
 	// Start server
