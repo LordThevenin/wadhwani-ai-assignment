@@ -22,12 +22,63 @@ func TestUserFacade_GetUser(t *testing.T) {
 		wantErr  bool
 	}
 	tests := []testStruct{
-		// TODO: Add test cases.
 		{
-			name:     "",
-			args:     args{},
+			name: "Cache Success",
+			args: args{
+				&gin.Context{},
+				1,
+				language.English,
+			},
+			wantUser: models.User{
+				PhoneNumber: 7357,
+				Name:        "testName",
+				State:       "testState",
+				District:    "testDistrict",
+				Village:     "testVillage",
+			},
+			wantErr: false,
+		},
+		{
+			name: "Fail",
+			args: args{
+				&gin.Context{},
+				3,
+				language.English,
+			},
 			wantUser: models.User{},
-			wantErr:  false,
+			wantErr:  true,
+		},
+		{
+			name: "DB Success",
+			args: args{
+				&gin.Context{},
+				2,
+				language.English,
+			},
+			wantUser: models.User{
+				PhoneNumber: 73572,
+				Name:        "testName2",
+				State:       "testState2",
+				District:    "testDistrict2",
+				Village:     "testVillage2",
+			},
+			wantErr: false,
+		},
+		{
+			name: "DB Success Translated",
+			args: args{
+				&gin.Context{},
+				2,
+				language.Hindi,
+			},
+			wantUser: models.User{
+				PhoneNumber: 73572,
+				Name:        "testTranslatedName2",
+				State:       "testTranslatedState2",
+				District:    "testTranslatedDistrict2",
+				Village:     "testTranslatedVillage2",
+			},
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
@@ -48,31 +99,6 @@ func TestUserFacade_GetUser(t *testing.T) {
 	}
 }
 
-func TestUserFacade_UploadUsers(t *testing.T) {
-	type args struct {
-		uploadData models.UserFileUpload
-	}
-	type testStruct struct {
-		name    string
-		args    args
-		wantErr bool
-	}
-	tests := []testStruct{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			f := &UserFacade{
-				userService:        &mocks.UserServiceMock{},
-				translationService: &mocks.GoogleTranslationServiceMock{},
-			}
-			if err := f.UploadUsers(tt.args.uploadData); (err != nil) != tt.wantErr {
-				t.Errorf("UploadUsers() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
 func TestUserFacade_translateUserModelToTargetLanguage(t *testing.T) {
 	type args struct {
 		ctx  *gin.Context
@@ -87,6 +113,66 @@ func TestUserFacade_translateUserModelToTargetLanguage(t *testing.T) {
 	}
 	tests := []testStruct{
 		// TODO: Add test cases.
+		{
+			name: "Translate Non English",
+			args: args{
+				&gin.Context{},
+				models.User{
+					PhoneNumber: 73572,
+					Name:        "testName2",
+					State:       "testState2",
+					District:    "testDistrict2",
+					Village:     "testVillage2",
+				},
+				language.Hindi,
+			},
+			wantTranslatedUser: models.User{
+				PhoneNumber: 73572,
+				Name:        "testTranslatedName2",
+				State:       "testTranslatedState2",
+				District:    "testTranslatedDistrict2",
+				Village:     "testTranslatedVillage2",
+			},
+			wantErr: false,
+		},
+		{
+			name: "Not Translate English",
+			args: args{
+				&gin.Context{},
+				models.User{
+					PhoneNumber: 73572,
+					Name:        "testName2",
+					State:       "testState2",
+					District:    "testDistrict2",
+					Village:     "testVillage2",
+				},
+				language.English,
+			},
+			wantTranslatedUser: models.User{
+				PhoneNumber: 73572,
+				Name:        "testName2",
+				State:       "testState2",
+				District:    "testDistrict2",
+				Village:     "testVillage2",
+			},
+			wantErr: false,
+		},
+		{
+			name: "Translate Failed",
+			args: args{
+				&gin.Context{},
+				models.User{
+					PhoneNumber: 73572,
+					Name:        "testName2",
+					State:       "testState2",
+					District:    "testDistrict2",
+					Village:     "testVillage2",
+				},
+				language.French,
+			},
+			wantTranslatedUser: models.User{},
+			wantErr:            true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

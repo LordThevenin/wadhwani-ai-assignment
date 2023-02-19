@@ -41,7 +41,6 @@ func (f *UserFacade) UploadUsers(uploadData models.UserFileUpload) (err error) {
 		utils.Logger().Errorf("UserFacade: error uploading users")
 		return
 	}
-	utils.Logger().Infof("UserFacade: cache hit")
 	return
 }
 
