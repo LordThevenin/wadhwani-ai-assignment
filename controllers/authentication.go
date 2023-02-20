@@ -31,7 +31,7 @@ func (c *AuthController) Register(ctx *gin.Context) {
 	}
 	err = c.authService.Register(user)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, "user upload failed")
+		ctx.JSON(http.StatusInternalServerError, "user register failed")
 		return
 	}
 	ctx.JSON(http.StatusOK, "success")
@@ -46,7 +46,7 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	}
 	token, err := c.authService.Login(user)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, "user upload failed")
+		ctx.JSON(http.StatusInternalServerError, "user login failed")
 		return
 	}
 	ctx.JSON(http.StatusOK, token)

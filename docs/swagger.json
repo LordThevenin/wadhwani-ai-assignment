@@ -1,0 +1,241 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Documentation of User Service API Endpoints.",
+    "title": "Service.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:80",
+  "basePath": "/user-service",
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "description": "Login User (Internal)",
+        "tags": [
+          "LoginUser"
+        ],
+        "operationId": "idLoginUser",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AuthUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/loginUserResponse"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "description": "Register User (Internal)",
+        "tags": [
+          "RegisterUser"
+        ],
+        "operationId": "idRegisterUser",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/AuthUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/registerUserResponse"
+          }
+        }
+      }
+    },
+    "/user/upload": {
+      "post": {
+        "security": [
+          {
+            "apiKey": [
+              "[]"
+            ]
+          }
+        ],
+        "description": "Upload User",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "UploadUser"
+        ],
+        "operationId": "idUploadUser",
+        "parameters": [
+          {
+            "name": "File",
+            "in": "formData",
+            "type": "file",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/uploadUserResponse"
+          }
+        }
+      }
+    },
+    "/user/{ID}": {
+      "get": {
+        "security": [
+          {
+            "apiKey": [
+              "[]"
+            ]
+          }
+        ],
+        "description": "Get User",
+        "tags": [
+          "GetUser"
+        ],
+        "operationId": "idGetUser",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "ID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "Accept-Language",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/getUserResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AuthUser": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string",
+          "x-go-name": "Password"
+        },
+        "userName": {
+          "type": "string",
+          "x-go-name": "UserName"
+        }
+      },
+      "x-go-package": "user-service/models"
+    },
+    "FileHeader": {
+      "type": "object",
+      "title": "A FileHeader describes a file part of a multipart request.",
+      "properties": {
+        "Filename": {
+          "type": "string"
+        },
+        "Header": {
+          "$ref": "#/definitions/MIMEHeader"
+        },
+        "Size": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "x-go-package": "mime/multipart"
+    },
+    "MIMEHeader": {
+      "description": "A MIMEHeader represents a MIME-style header mapping\nkeys to sets of values.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "x-go-package": "net/textproto"
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "district": {
+          "type": "string",
+          "x-go-name": "District"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "phoneNumber": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "PhoneNumber"
+        },
+        "state": {
+          "type": "string",
+          "x-go-name": "State"
+        },
+        "village": {
+          "type": "string",
+          "x-go-name": "Village"
+        }
+      },
+      "x-go-package": "user-service/models"
+    }
+  },
+  "responses": {
+    "getUserResponse": {
+      "description": "GetUser responds with the getUser",
+      "schema": {
+        "$ref": "#/definitions/User"
+      }
+    },
+    "loginUserResponse": {
+      "description": "LoginUser responds with the Login User"
+    },
+    "registerUserResponse": {
+      "description": "RegisterUser responds with the Register User"
+    },
+    "uploadUserResponse": {
+      "description": "UploadUser responds with the uploadUserResponse"
+    }
+  },
+  "securityDefinitions": {
+    "bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}
