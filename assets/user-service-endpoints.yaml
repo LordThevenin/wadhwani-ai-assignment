@@ -1,0 +1,193 @@
+_type: export
+__export_format: 4
+__export_date: 2023-02-21T14:56:18.164Z
+__export_source: insomnia.desktop.app:v2022.7.5
+resources:
+  - _id: req_b6325d39f54f4238bca25f5d76e67271
+    parentId: fld_71d3597ac6914e48a8e8ff1cb0831585
+    modified: 1676912779847
+    created: 1676630546480
+    url: "{{url}}:{{port}}/user-service/auth/register"
+    name: Register
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"userName": "test1",
+        	"password": "password1"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_6290820387be404d84827d5394fe7f74
+    authentication: {}
+    metaSortKey: -1676630546480
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_71d3597ac6914e48a8e8ff1cb0831585
+    parentId: wrk_0cd149b4b36c4256a096211644dcdd66
+    modified: 1676573018027
+    created: 1676573018027
+    name: user-translate-go
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1676573018027
+    _type: request_group
+  - _id: wrk_0cd149b4b36c4256a096211644dcdd66
+    parentId: null
+    modified: 1676630587035
+    created: 1676572978620
+    name: Personal
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_2f4631c617034b60ae1884234a05f1ac
+    parentId: fld_71d3597ac6914e48a8e8ff1cb0831585
+    modified: 1676912780550
+    created: 1676630896122
+    url: "{{url}}:{{port}}/user-service/auth/login"
+    name: Login
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"userName": "test1",
+        	"password": "password1"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_bde393d7cde7488990e64c39b5eb2866
+    authentication: {}
+    metaSortKey: -1676602035986.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_8711d9d45e7348f9b5cad9fc0165b837
+    parentId: fld_71d3597ac6914e48a8e8ff1cb0831585
+    modified: 1676911625304
+    created: 1676573525493
+    url: "{{url}}:{{port}}/user-service/user/1"
+    name: Get User
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - id: pair_0c5c631614e44663a6aac9b1e6498307
+        name: Accept-Language
+        value: hi
+        description: ""
+      - id: pair_b4eb3ca6432849e58e2d3610e3b22e22
+        name: Authorization
+        value: Bearer {{ bearer_token }}
+        description: ""
+    authentication: {}
+    metaSortKey: -1676573525493
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_2ca88900e54e49f9977f2d5b623b1ce9
+    parentId: fld_71d3597ac6914e48a8e8ff1cb0831585
+    modified: 1676911626803
+    created: 1676573022867
+    url: "{{url}}:{{port}}/user-service/user/upload"
+    name: Upload Users
+    description: ""
+    method: POST
+    body:
+      mimeType: multipart/form-data
+      params:
+        - id: pair_bc225eb0fbcb424bab78978b54bf1759
+          name: file
+          value: ""
+          description: ""
+          type: file
+          fileName: /Users/rastogi-ula/Downloads/SDE Assignment - Sheet1.csv
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: multipart/form-data
+        id: pair_3ed9b3e6dcbf475ea4593d1bd9f58444
+        disabled: false
+      - id: pair_6ee705cc6d374e02b1cd3cd87e91f75d
+        name: Authorization
+        value: Bearer {{ bearer_token}}
+        description: ""
+    authentication: {}
+    metaSortKey: -1676573022867
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_6c67e20f9beb69d5a8d712f24b826e7e3c6c7c1b
+    parentId: wrk_0cd149b4b36c4256a096211644dcdd66
+    modified: 1676630685993
+    created: 1676572978623
+    name: Base Environment
+    data: {}
+    dataPropertyOrder: {}
+    color: null
+    isPrivate: false
+    metaSortKey: 1676572978623
+    _type: environment
+  - _id: jar_6c67e20f9beb69d5a8d712f24b826e7e3c6c7c1b
+    parentId: wrk_0cd149b4b36c4256a096211644dcdd66
+    modified: 1676572978624
+    created: 1676572978624
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_ed1e53be726e432c8d7c43dd422fc674
+    parentId: wrk_0cd149b4b36c4256a096211644dcdd66
+    modified: 1676572978621
+    created: 1676572978621
+    fileName: Ula
+    contents: ""
+    contentType: yaml
+    _type: api_spec
+  - _id: env_b8a0fad0e87d400e9cbf6bfaea8dcad0
+    parentId: env_6c67e20f9beb69d5a8d712f24b826e7e3c6c7c1b
+    modified: 1676910461700
+    created: 1676630690072
+    name: localhost
+    data:
+      url: http://localhost
+      port: "80"
+      bearer_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2NzY5OTIyNjYsInJvbGUiOiJ1c2VyIiwidXNlcl9pZCI6NX0.46jHbrXBaP2-qnQBztIrUwxn4iFnIhDtRgEizha87oQ
+    dataPropertyOrder:
+      "&":
+        - url
+        - port
+        - bearer_token
+    color: null
+    isPrivate: false
+    metaSortKey: 1676630690072
+    _type: environment
