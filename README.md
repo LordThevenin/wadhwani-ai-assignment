@@ -69,6 +69,9 @@ brew install go-swagger
 
 # Serve swagger doc (API Documentation)
 swagger serve -F=swagger ./docs/swagger.json
+
+# Get coverage
+go tool cover -func profile.cov
 ```
 
 ## Testing
